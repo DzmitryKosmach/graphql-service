@@ -1,1 +1,1 @@
-# graphql-service
+# Graphql Service
