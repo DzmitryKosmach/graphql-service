@@ -1,51 +1,49 @@
 import express, { Request, Response } from "express";
-import { ApolloServer, gql } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 import "dotenv/config";
 import { typeDefsArtist } from "./modules/artists/schemas/artist";
-//import { typeDefsAlbum } from "./modules/albums/schemas/album";
+import { typeDefsAlbum } from "./modules/albums/schemas/album";
 import { typeDefsBand } from "./modules/bands/schemas/band";
 import { typeDefsGenre } from "./modules/genres/schemas/genre";
 import { typeDefsTrack } from "./modules/tracks/schemas/track";
+import { typeDefsFavourites } from "./modules/favourites/schemas/favoutite";
+import { typeDefsUser } from "./modules/users/schemas/user";
 
 import { genresResolver } from "./modules/genres/resolvers/genre.resolver";
-
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-
-  type Query {
-    hello2: String
-  }
-`;
-
-const resolver1 = {
-  Query: {
-    hello: () => {
-      return "Hello World!!!".toString();
-    },
-  },
-};
-
-const resolver2 = {
-  Query: {
-    hello2: () => {
-      return "Hello World2!!!";
-    },
-  },
-};
+import { albumsResolver } from "./modules/albums/resolvers/album.resolver";
+import { artistsResolver } from "./modules/artists/resolvers/artist.resolver";
+import { bandsResolver } from "./modules/bands/resolvers/band.resolver";
+import { favouritesResolver } from "./modules/favourites/resolvers/favourites.resolver";
+import { tracksResolver } from "./modules/tracks/resolvers/track.resolver";
+import { usersResolver } from "./modules/users/resolvers/user.resolver";
 
 async function startServer() {
   const app = express();
   const apolloServer = new ApolloServer({
+    csrfPrevention: true,
+    cache: "bounded",
     typeDefs: [
-      typeDefs,
       typeDefsArtist,
+      typeDefsAlbum,
       typeDefsBand,
       typeDefsGenre,
       typeDefsTrack,
+      typeDefsFavourites,
+      typeDefsUser,
     ],
-    resolvers: [resolver1, resolver2, genresResolver],
+    resolvers: [
+      genresResolver,
+      albumsResolver,
+      artistsResolver,
+      tracksResolver,
+      bandsResolver,
+      favouritesResolver,
+      usersResolver,
+    ],
+    context: ({ req }) => {
+      const jwt = req.headers.authorization || "";
+      return { jwt };
+    },
   });
 
   await apolloServer.start();

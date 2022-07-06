@@ -3,7 +3,7 @@ import "dotenv/config";
 import { replaceIdAndToJson } from "../../../common/utils";
 
 const client = axios.create({
-  baseURL: process.env["ALBUMS_URL"],
+  baseURL: process.env["BANDS_URL"],
   responseType: "json",
 });
 
@@ -56,4 +56,4 @@ async function update(id: string, reqData: Object, jwt: string) {
   return replaceIdAndToJson(data);
 }
 
-export const albumService = { findAll, findOneById, create, remove, update };
+export const bandService = { findAll, findOneById, create, remove, update };

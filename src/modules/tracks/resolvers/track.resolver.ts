@@ -1,12 +1,85 @@
-import * as tracksService from "../services/track.service";
+import { trackService } from "../services/track.service";
+import { artistService } from "../../artists/services/artist.service";
+import { bandService } from "../../bands/services/band.service";
+import { genreService } from "../../genres/services/genre.service";
+import { albumService } from "../../albums/services/album.service";
+
+type CreateArgs = {
+  id: string;
+};
+
+type Context = {
+  jwt: string;
+};
 
 export const tracksResolver = {
   Query: {
-    tracks: async () => await tracksService.findAll(),
+    tracks: async () => {
+      return await trackService.findAll();
+    },
+    track: async (_: any, args: CreateArgs) =>
+      await trackService.findOneById(args.id),
+  },
+
+  Track: {
+    async bands(parent: { bandsIds: string[] }) {
+      const { bandsIds } = parent;
+      if (!bandsIds) return null;
+      return await Promise.all(
+        bandsIds.map((id: string) => {
+          return bandService.findOneById(id);
+        })
+      );
+    },
+
+    async album(parent: { albumId: string }) {
+      const { albumId } = parent;
+      if (!albumId) return null;
+      console.log("Track.album: start");
+      return albumService.findOneById(albumId);
+    },
+
+    async artists(parent: { artistsIds: string[] }) {
+      const { artistsIds } = parent;
+      if (!artistsIds) return null;
+      return await Promise.all(
+        artistsIds.map((id: string) => {
+          console.log("Track.artists: start");
+          return artistService.findOneById(id);
+        })
+      );
+    },
+
+    async genres(parent: { genresIds: string[] }) {
+      const { genresIds } = parent;
+      if (!genresIds) return null;
+      return await Promise.all(
+        genresIds.map((id: string) => {
+          console.log("Track.genres: start");
+          return genreService.findOneById(id);
+        })
+      );
+    },
+  },
+
+  Mutation: {
+    createTrack: async (_: any, args: Object, context: Context) => {
+      if (!context.jwt) return null;
+      return await trackService.create(args, context.jwt);
+    },
+    deleteTrack: async (_: any, args: CreateArgs, context: Context) => {
+      if (!context.jwt) return null;
+      return await trackService.remove(args.id, context.jwt);
+    },
+    updateTrack: async (_: any, args: Object, context: Context) => {
+      if (!context.jwt) return null;
+      const { id } = args as CreateArgs;
+      return await trackService.update(id, args, context.jwt);
+    },
   },
 };
 
-/* import {} from "";
+/* //import {Resolver} from "graphql";
 import { TracksService } from "../services/tacks.service";
 import { GenresService } from "../../genres/services/genres.service";
 import { ArtistsService } from "../../artists/services/artists.service";

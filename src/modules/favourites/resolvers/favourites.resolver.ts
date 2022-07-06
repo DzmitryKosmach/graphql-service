@@ -1,25 +1,33 @@
-import { albumService } from "../services/album.service";
+import  Jwt  from "jsonwebtoken";
+import "dotenv/config";
+
+import { favouritesService } from "../services/favourites.service";
 import { artistService } from "../../artists/services/artist.service";
 import { bandService } from "../../bands/services/band.service";
 import { trackService } from "../../tracks/services/track.service";
 import { genreService } from "../../genres/services/genre.service";
 
-type CreateArgs = {
+/* type CreateArgs = {
   id: string;
-};
+}; */
 
 type Context = {
-    jwt: string;
+  jwt: string;
 };
 
-export const albumsResolver = {
+export const favouritesResolver = {
   Query: {
-    albums: async () => await albumService.findAll(),
-    album: async (_: any, args: CreateArgs) =>
-      await albumService.findOneById(args.id),
+    favourites: async (_: any, __: any, context: Context) => {
+      if (!context.jwt) return null;
+      const decoded = Jwt.verify(context.jwt, process.env["SECRET"] || "");  
+      //https://stackoverflow.com/questions/56753929/how-to-get-user-id-using-jwt-token
+      //@ts-ignore
+      const userId = decoded.id;    
+      return await favouritesService.findOneById(userId);
+    },
   },
 
-  Album: {
+  Favourites: {
     async bands(parent: { bands: string[] }) {
         const { bands } = parent;      
         if (!bands) return null;
@@ -58,22 +66,6 @@ export const albumsResolver = {
             return genreService.findOneById(id);
           })
         );
-    },
-  },
-
-  Mutation: {
-    createAlbum: async (_: any, args: Object, context: Context) => {
-      if (!context.jwt) return null;
-      return await albumService.create(args, context.jwt);
-    },
-    deleteAlbum: async (_: any, args: CreateArgs, context: Context) => {
-      if (!context.jwt) return null;
-      return await albumService.remove(args.id, context.jwt);
-    },
-    updateAlbum: async (_: any, args: Object, context: Context) => {
-      if (!context.jwt) return null;
-      const { id } = args as CreateArgs;      
-      return await albumService.update(id, args, context.jwt);
     },
   },
 };

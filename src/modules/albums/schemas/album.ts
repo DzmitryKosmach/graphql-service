@@ -1,7 +1,7 @@
-import { gql } from "apollo-server-express"
+import { gql } from "apollo-server-express";
 
 export const typeDefsAlbum = gql`
-type Album {
+  type Album {
     id: ID!
     name: String
     released: Int
@@ -10,8 +10,40 @@ type Album {
     tracks: [Track]
     genres: [Genre]
     image: String
-}
+  }
 
-type Query {
-  
-}`
+  type Query {
+    albums(limit: Int, offset: Int): [Album]
+    album(id: ID!): Album
+  }
+
+  type DeletedCount {
+    deletedCount: String
+    acknowledged: Boolean
+  }
+
+  type Mutation {
+    createAlbum(
+      name: String
+      released: Int
+      artistsIds: [String]
+      bandsIds: [String]
+      trackIds: [String]
+      genresIds: [String]
+      image: String
+    ): Album
+
+    deleteAlbum(id: ID!): DeletedCount
+
+    updateAlbum(
+      id: ID!
+      name: String
+      released: Int
+      artistsIds: [String]
+      bandsIds: [String]
+      trackIds: [String]
+      genresIds: [String]
+      image: String
+    ): Album
+  }
+`;

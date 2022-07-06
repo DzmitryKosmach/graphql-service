@@ -1,20 +1,29 @@
-import { gql } from "apollo-server-express"
+import { gql } from "apollo-server-express";
 
-export const typeDefsArtist = gql`
-type JWT {
-  jwt: String!
-}
+export const typeDefsUser = gql`
+  type JWT {
+    jwt: String!
+  }
 
-type User {
+  type User {
     id: ID!
     firstName: String
-    secondName: String
-    middleName: String
-    password: String!
+    lastName: String
+    password: String
     email: String!
-}
+  }
 
-type Query {
-  jwt(email: String!, password: String!): JWT
-  user(id: ID!): User
-}`
+  type Query {
+    jwt(email: String!, password: String!): JWT
+    user(id: ID!): User
+  }
+
+  type Mutation {
+    register(
+      firstName: String!
+      lastName: String!
+      password: String!
+      email: String!
+    ): User
+  }
+`;
