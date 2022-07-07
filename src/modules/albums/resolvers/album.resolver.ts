@@ -66,10 +66,12 @@ export const albumsResolver = {
       if (!context.jwt) return null;
       return await albumService.create(args, context.jwt);
     },
+
     deleteAlbum: async (_: any, args: CreateArgs, context: Context) => {
       if (!context.jwt) return null;
       return await albumService.remove(args.id, context.jwt);
     },
+    
     updateAlbum: async (_: any, args: Object, context: Context) => {
       if (!context.jwt) return null;
       const { id } = args as CreateArgs;      

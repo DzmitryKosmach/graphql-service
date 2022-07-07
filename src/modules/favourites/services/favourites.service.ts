@@ -7,16 +7,31 @@ const client = axios.create({
   responseType: "json",
 });
 
-
-async function findOneById(id: string) {
-  const response = await client.get(`/${id}`).catch(() => {
-    return null;
+async function findOne(jwt: string) {
+  const response = await client.get("", {
+    headers: {
+      Authorization: jwt,
+    },
   });
   const responseData = response?.data;
+  //console.log("Favorites: " + JSON.stringify(responseData));
   if (!responseData) {
     return null;
   }
   return replaceIdAndToJson(responseData);
 }
 
-export const favouritesService = { findOneById };
+async function addItem(reqData: Object, jwt: string) {
+  console.log("AddItem: data " + JSON.stringify(reqData));
+  const response = await client
+    .put("/add", reqData, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: jwt,
+      },
+    });  
+  const { data } = response;
+  return replaceIdAndToJson(data);
+}
+
+export const favouritesService = { findOne, addItem };

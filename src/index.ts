@@ -6,7 +6,7 @@ import { typeDefsAlbum } from "./modules/albums/schemas/album";
 import { typeDefsBand } from "./modules/bands/schemas/band";
 import { typeDefsGenre } from "./modules/genres/schemas/genre";
 import { typeDefsTrack } from "./modules/tracks/schemas/track";
-import { typeDefsFavourites } from "./modules/favourites/schemas/favoutite";
+import { typeDefsFavourites } from "./modules/favourites/schemas/favourites";
 import { typeDefsUser } from "./modules/users/schemas/user";
 
 import { genresResolver } from "./modules/genres/resolvers/genre.resolver";
