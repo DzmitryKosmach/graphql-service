@@ -4,13 +4,20 @@ type CreateArgs = {
   id: string;
 };
 
+type CreateParams = {
+  limit: string;
+  offset: string;
+};
+
 type Context = {
   jwt: string;
 };
 
 export const genresResolver = {
   Query: {
-    genres: async () => await genreService.findAll(),
+    genres: async (_: any, params: CreateParams) => {
+      return await genreService.findAll(params.limit, params.offset);
+    },
     genre: async (_: any, args: CreateArgs) =>
       await genreService.findOneById(args.id),
   },

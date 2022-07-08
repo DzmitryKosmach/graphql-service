@@ -4,13 +4,21 @@ type CreateArgs = {
   id: string;
 };
 
+type CreateParams = {
+  limit: string;
+  offset: string;
+};
+
 type Context = {
   jwt: string;
 };
 
 export const bandsResolver = {
   Query: {
-    bands: async () => await bandService.findAll(),
+    bands: async (_: any, params: CreateParams) => {
+      return await bandService.findAll(params.limit, params.offset);
+    },
+
     band: async (_: any, args: CreateArgs) =>
       await bandService.findOneById(args.id),
   },

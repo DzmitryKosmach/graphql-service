@@ -5,13 +5,21 @@ type CreateArgs = {
   id: string;
 };
 
+type CreateParams = {
+  limit: string;
+  offset: string;
+};
+
 type Context = {
   jwt: string;
 };
 
 export const artistsResolver = {
   Query: {
-    artists: async () => await artistService.findAll(),
+    artists: async (_: any, params: CreateParams) => {
+      return await artistService.findAll(params.limit, params.offset);
+    },
+
     artist: async (_: any, args: CreateArgs) =>
       await artistService.findOneById(args.id),
   },

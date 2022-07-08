@@ -7,10 +7,13 @@ const client = axios.create({
   responseType: "json",
 });
 
-async function findAll() {  
-  const response = await client.get("");
-  const responseData = response.data;
-  const { items } = responseData;  
+async function findAll(limit: string, offset: string) {
+  const responseData = (
+    await client.get("", {
+      params: { limit, offset },
+    })
+  ).data;
+  const { items } = responseData;
   return replaceIdAndToJson(items);
 }
 

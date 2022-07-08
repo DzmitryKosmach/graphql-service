@@ -8,15 +8,21 @@ type CreateArgs = {
   id: string;
 };
 
+type CreateParams = {
+  limit: string;
+  offset: string;
+};
+
 type Context = {
   jwt: string;
 };
 
 export const tracksResolver = {
   Query: {
-    tracks: async () => {
-      return await trackService.findAll();
+    tracks: async (_: any, params: CreateParams) => {
+      return await trackService.findAll(params.limit, params.offset);
     },
+
     track: async (_: any, args: CreateArgs) =>
       await trackService.findOneById(args.id),
   },
