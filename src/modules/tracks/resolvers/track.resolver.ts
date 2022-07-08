@@ -35,7 +35,6 @@ export const tracksResolver = {
     async album(parent: { albumId: string }) {
       const { albumId } = parent;
       if (!albumId) return null;
-      console.log("Track.album: start");
       return albumService.findOneById(albumId);
     },
 
@@ -44,7 +43,6 @@ export const tracksResolver = {
       if (!artistsIds) return null;
       return await Promise.all(
         artistsIds.map((id: string) => {
-          console.log("Track.artists: start");
           return artistService.findOneById(id);
         })
       );
@@ -55,7 +53,6 @@ export const tracksResolver = {
       if (!genresIds) return null;
       return await Promise.all(
         genresIds.map((id: string) => {
-          console.log("Track.genres: start");
           return genreService.findOneById(id);
         })
       );

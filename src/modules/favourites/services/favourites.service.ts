@@ -14,7 +14,6 @@ async function findOne(jwt: string) {
     },
   });
   const responseData = response?.data;
-  //console.log("Favorites: " + JSON.stringify(responseData));
   if (!responseData) {
     return null;
   }
@@ -22,14 +21,12 @@ async function findOne(jwt: string) {
 }
 
 async function addItem(reqData: Object, jwt: string) {
-  console.log("AddItem: data " + JSON.stringify(reqData));
-  const response = await client
-    .put("/add", reqData, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: jwt,
-      },
-    });  
+  const response = await client.put("/add", reqData, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: jwt,
+    },
+  });
   const { data } = response;
   return replaceIdAndToJson(data);
 }

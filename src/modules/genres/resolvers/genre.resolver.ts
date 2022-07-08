@@ -26,7 +26,6 @@ export const genresResolver = {
     updateGenre: async (_: any, args: Object, context: Context) => {
       if (!context.jwt) return null;
       const { id } = args as CreateArgs;
-      console.log(JSON.stringify(args));
       return await genreService.update(id, args, context.jwt);
     },
   },

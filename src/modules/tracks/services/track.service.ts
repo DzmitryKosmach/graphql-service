@@ -53,7 +53,6 @@ async function update(id: string, reqData: Object, jwt: string) {
     },
   });
   const { data } = response;
-  console.log("PUT Track: " + JSON.stringify(data));
   return replaceIdAndToJson(data);
 }
 

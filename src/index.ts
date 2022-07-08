@@ -44,6 +44,10 @@ async function startServer() {
       const jwt = req.headers.authorization || "";
       return { jwt };
     },
+    formatError: (err) => {
+      console.error("Error: " + err.message);
+      return new Error("Internal server error");
+    },
   });
 
   await apolloServer.start();

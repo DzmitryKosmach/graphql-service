@@ -1,4 +1,3 @@
-//import Jwt from "jsonwebtoken";
 import "dotenv/config";
 
 import { favouritesService } from "../services/favourites.service";
@@ -21,12 +20,7 @@ export const favouritesResolver = {
   Query: {
     favourites: async (_: any, __: any, context: Context) => {
       const jwt = context.jwt;
-      //console.log("favourites: jwt " + jwt);
       if (!jwt) return null;
-      /* const jwtString = jwt.slice(7);
-      const decodedJwt = Jwt.verify(jwtString, process.env["SECRET"] || "");
-      const userId = (decodedJwt as { _id: string })._id;
-      if (!userId) return null; */
       return await favouritesService.findOne(jwt);
     },
   },
@@ -74,32 +68,44 @@ export const favouritesResolver = {
   },
 
   Mutation: {
-    addTrackToFavourites: async (_: any, args: CreateArgs, context: Context) => {
+    addTrackToFavourites: async (
+      _: any,
+      args: CreateArgs,
+      context: Context
+    ) => {
       if (!context.jwt) return null;
-      const postTrackFavourites =  getPostData(args, Favourites.TRACKS)
+      const postTrackFavourites = getPostData(args, Favourites.TRACKS);
       return await favouritesService.addItem(postTrackFavourites, context.jwt);
     },
 
     addBandToFavourites: async (_: any, args: CreateArgs, context: Context) => {
       if (!context.jwt) return null;
-      const postBandFavourites =  getPostData(args, Favourites.BANDS)
+      const postBandFavourites = getPostData(args, Favourites.BANDS);
       return await favouritesService.addItem(postBandFavourites, context.jwt);
     },
 
-    addArtistToFavourites: async (_: any, args: CreateArgs, context: Context) => {
+    addArtistToFavourites: async (
+      _: any,
+      args: CreateArgs,
+      context: Context
+    ) => {
       if (!context.jwt) return null;
-      const postArtistFavourites =  getPostData(args, Favourites.ARTISTS)
+      const postArtistFavourites = getPostData(args, Favourites.ARTISTS);
       return await favouritesService.addItem(postArtistFavourites, context.jwt);
     },
 
-    addGenreToFavourites: async (_: any, args: CreateArgs, context: Context) => {
+    addGenreToFavourites: async (
+      _: any,
+      args: CreateArgs,
+      context: Context
+    ) => {
       if (!context.jwt) return null;
-      const postGenreFavourites =  getPostData(args, Favourites.GENRES)
+      const postGenreFavourites = getPostData(args, Favourites.GENRES);
       return await favouritesService.addItem(postGenreFavourites, context.jwt);
     },
-  }
+  },
 };
 
-function getPostData(userId: CreateArgs, itemId: string ){
+function getPostData(userId: CreateArgs, itemId: string) {
   return JSON.parse(`{"id": "${userId.id}", "type": "${itemId}"}`);
 }
