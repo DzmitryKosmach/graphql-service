@@ -29,6 +29,6 @@ async function addItem(reqData: Object, jwt: string) {
   });
   const { data } = response;
   return replaceIdAndToJson(data);
-}
+} 
 
 export const favouritesService = { findOne, addItem };
